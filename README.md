@@ -5,6 +5,8 @@
 
 # Setup
 
+This plugin requires Python 3.7 or newer to be available on `$PATH` as `python3`.
+
 1) Clone this repo, or download [aqi.5m.py][], and then copy [aqi.5m.py][] into
    your BitBar plugins directory.
 
