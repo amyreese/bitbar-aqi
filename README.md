@@ -13,7 +13,7 @@ This plugin requires Python 3.7 or newer to be available on `$PATH` as `python3`
 2) Edit [aqi.5m.py][] to add local sensor IDs to the `SENSOR_IDS` list:
 
 ```python
-SENSOR_IDS = [6014, 16943, 19855]
+SENSOR_IDS = [6014, 16943, 58743]
 ```
 
 3) Refresh BitBar
