@@ -13,7 +13,7 @@ PURPLE_JSON_URL = "https://www.purpleair.com/json?show={id}"
 PURPLE_MAP_URL = (
     "https://www.purpleair.com/map?opt=1/i/mAQI/a10/cC0&select={id}#11/{lat}/{lon}"
 )
-STATS_KEYS = ("v", "v1", "v2", "v3", "v4", "v5")
+STATS_KEYS = ("v", "v1", "v2", "v3")
 
 
 Series = Tuple[float, ...]
