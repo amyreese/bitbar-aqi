@@ -4,6 +4,8 @@
 # Licensed under the MIT License
 
 import json
+import logging
+import sys
 from dataclasses import dataclass
 from typing import List, Tuple
 from urllib.request import urlopen
@@ -18,6 +20,8 @@ STATS_KEYS = ("v", "v1", "v2", "v3")
 
 Series = Tuple[float, ...]
 
+logging.basicConfig(stream=sys.stderr, level=logging.WARNING)
+
 
 @dataclass
 class Result:
@@ -25,10 +29,21 @@ class Result:
     name: str
     lat: float
     lon: float
+    humidity: float
     stats: List[Series]
 
+def epa_pm(pm: float, humidity: float) -> float:
+    # epa adjustment
+    logging.info(f"humidity={humidity!r}")
+    logging.info(f"pm={pm!r}")
+    adjusted = ((0.52 * ((pm + pm) / 2) - (0.085 * humidity) + 5.71))
+    logging.info(f"EPA adjustment: {pm:.1f}pm, {humidity:.1f}rh -> {adjusted:.1f}pm")
+    return adjusted
 
-def aqi(pm: float) -> int:
+
+def aqi(pm: float, humidity: float) -> int:
+    pm = epa_pm(pm, humidity)
+
     def calc(cp: float, ih: float, il: float, bph: float, bpl: float) -> int:
         a = ih - il
         b = bph - bpl
@@ -85,6 +100,7 @@ def fetch(sensor_id: int) -> Result:
         name=result["Label"],
         lat=result["Lat"],
         lon=result["Lon"],
+        humidity=float(result["humidity"]),
         stats=stats,
     )
 
@@ -92,12 +108,12 @@ def fetch(sensor_id: int) -> Result:
 
 
 def combined(result) -> int:
-    values = [aqi(pm) for series in result.stats for pm in series[:1]]
+    values = [aqi(pm, result.humidity) for series in result.stats for pm in series[:1]]
     return round(sum(values) / len(values))
 
 
 def trend(result) -> str:
-    values = [aqi(pm) for pm in result.stats[0]]
+    values = [aqi(pm, result.humidity) for pm in result.stats[0]]
     avg = sum(values) / len(values)
     latest = values[0]
     dev = abs(avg - latest)
