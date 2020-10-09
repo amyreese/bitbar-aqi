@@ -10,7 +10,13 @@ This plugin requires Python 3.7 or newer to be available on `$PATH` as `python3`
 1) Clone this repo, or download [aqi.5m.py][], and then copy [aqi.5m.py][] into
    your BitBar plugins directory.
 
-2) Edit [aqi.5m.py][] to add local sensor IDs to the `SENSOR_IDS` list:
+2) Add your local sensor IDS to a `purple-sensors.json` file next to [aqi.5m.py][]:
+
+```json
+{"sensor_ids": [6014, 16943, 58743]}
+```
+
+   OR: Edit [aqi.5m.py][] to add local sensor IDs directly to `SENSOR_IDS`:
 
 ```python
 SENSOR_IDS = [6014, 16943, 58743]

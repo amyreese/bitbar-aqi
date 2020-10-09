@@ -7,10 +7,11 @@ import json
 import logging
 import sys
 from dataclasses import dataclass
+from pathlib import Path
 from typing import List, Tuple
 from urllib.request import urlopen
 
-SENSOR_IDS = []  # Add local PurpleAir sensor IDs here
+SENSOR_IDS = []  # Add local PurpleAir sensor IDs here, or in purple-sensors.json
 PURPLE_JSON_URL = "https://www.purpleair.com/json?show={id}"
 PURPLE_MAP_URL = (
     "https://www.purpleair.com/map?opt=1/i/mAQI/a10/cC0&select={id}#11/{lat}/{lon}"
@@ -128,8 +129,18 @@ def trend(result) -> str:
 
 
 def main():
+    global SENSOR_IDS
     if not SENSOR_IDS:
-        print("add PurpleAir sensor IDs")
+        here = Path(__file__).parent
+        pfile = here / "purple-sensors.json"
+        logging.info(f"looking for sensor config in {pfile}")
+        if pfile.is_file():
+            data = json.loads(pfile.read_text())
+            logging.info(f"config data: {data!r}")
+            SENSOR_IDS = data.get("sensor_ids", [])
+
+    if not SENSOR_IDS:
+        print("Add PurpleAir sensor IDs")
         return
 
     lines = []
