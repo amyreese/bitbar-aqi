@@ -132,7 +132,7 @@ def main():
     global SENSOR_IDS
     if not SENSOR_IDS:
         here = Path(__file__).parent
-        pfile = here / "purple-sensors.json"
+        pfile = here / ".purple-sensors.json"
         logging.info(f"looking for sensor config in {pfile}")
         if pfile.is_file():
             data = json.loads(pfile.read_text())
